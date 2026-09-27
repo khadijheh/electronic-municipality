@@ -27,7 +27,7 @@ void main() {
       await tester.pump(const Duration(seconds: 3));
 
       // إكمال حركة الانتقال إلى شاشة تسجيل الدخول.
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(seconds: 2));
 
       expect(find.text('تسجيل الدخول'), findsWidgets);
       expect(
