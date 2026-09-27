@@ -1,0 +1,52 @@
+name: Flutter CI/CD
+
+# متى يعمل هذا الملف:
+# - عند أي push إلى فرع main
+# - عند أي Pull Request موجّه إلى main
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    name: Analyze, Test & Build APK
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1) تحميل الكود من المستودع
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2) تثبيت Flutter
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          flutter-version: '3.24.0' # عدّل الرقم ليطابق نسخة Flutter التي تستخدمها محلياً (flutter --version)
+
+      # 3) تحميل الحزم (pub get)
+      - name: Install dependencies
+        run: flutter pub get
+
+      # 4) فحص الكود (يماثل flutter analyze الذي تشغّله محلياً)
+      - name: Analyze code
+        run: flutter analyze
+
+      # 5) تشغيل الاختبارات (إن وُجدت في مجلد test/)
+      - name: Run tests
+        run: flutter test
+
+      # 6) بناء ملف APK (نسخة release)
+      #    API_BASE_URL يُقرأ من GitHub Secrets، لا يُكتب هنا مباشرة لأسباب أمنية
+      - name: Build APK
+        run: flutter build apk --release --dart-define=API_BASE_URL=${{ secrets.API_BASE_URL }}
+
+      # 7) رفع ملف APK كمرفق يمكن تنزيله من صفحة الـ Run على GitHub
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 30
