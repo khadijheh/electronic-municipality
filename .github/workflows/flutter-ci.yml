@@ -24,7 +24,6 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-          flutter-version: '3.32.2' # عدّل الرقم ليطابق نسخة Flutter التي تستخدمها محلياً (flutter --version)
 
       # 3) تحميل الحزم (pub get)
       - name: Install dependencies
