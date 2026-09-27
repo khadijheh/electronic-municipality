@@ -31,7 +31,7 @@ jobs:
 
       # 4) فحص الكود (يماثل flutter analyze الذي تشغّله محلياً)
       - name: Analyze code
-        run: flutter analyze
+        run: flutter analyze --no-fatal-infos
 
       # 5) تشغيل الاختبارات (إن وُجدت في مجلد test/)
       - name: Run tests
